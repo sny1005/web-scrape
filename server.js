@@ -1,10 +1,9 @@
-var express = require('express');
-var fs = require('fs');
-var request = require('request');
-var cheerio = require('cheerio');
-var app     = express();
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
+const express = require('express');
+const fs = require('fs');
+const request = require('request');
+const cheerio = require('cheerio');
+const app     = express();
+const puppeteer = require('puppeteer-core')
 
 app.get('/', function(req, res){
 
@@ -16,37 +15,37 @@ app.get('/', function(req, res){
     // The first parameter is our URL
     // The callback function takes 3 parameters, an error, response status code and the html
 
+    (async () => {
+      const browser = await puppeteer.launch({executablePath: 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe -incognito'});
+      const page = await browser.newPage();
+      await page.goto(url);
+      await page.screenshot({path: 'example.png'});
+
+      await browser.close();
+    })();
+
+/*
     request(url, function(error, response, html){
 
         // First we'll check to make sure no errors occurred when making the request
 
+
         if(!error){
             // Next, we'll utilize the cheerio library on the returned html which will essentially give us jQuery functionality
-/*
-            var $ = cheerio.load(html);
 
-            fs.writeFile('./output.html', $.html(), (err) => {
-                if(err){
-                    console.log('Error occured during saving output to file');
-                    res.send("Error!");
-                }
-                else{
-                    console.log('File saved to %s/output', __dirname);
-                    res.send("Success!");
-                }
-            })
-            //res.send($.html());
-*/
-            var options = {resources: "usable",
-                runScripts: "dangerously"
-//                runScripts: "outside-only"
+
+
+            fs.writeFile('./output.html', jadom.serializeDocument(dom.window.document), (err) => {
+            if(err){
+                console.log('Error occured during saving output to file');
+                res.send("Error!");
             }
-            JSDOM.fromURL(url, options).then(dom => {
-                //console.log(dom.serialize());
-                console.log(dom.window.document.pages);
-            });
+            else{
+                console.log('File saved to %s/output', __dirname);
+                res.send("Success!");
+            }});
         }
-    })
+    })*/
 
 })
 

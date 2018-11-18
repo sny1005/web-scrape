@@ -2,18 +2,17 @@
   "name": "web-scrape",
   "version": "0.0.1",
   "description": "Scrape le web.",
-  "main": "server.js",
+  "main": "pptr.js",
   "author": "Scotch",
   "dependencies": {
-    "axios": "^0.18.0",
     "cheerio": "latest",
     "express": "latest",
     "help": "^3.0.2",
-    "jsdom": "^12.2.0",
+    "puppeteer-core": "^1.10.0",
     "request": "latest"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node pptr.js"
   },
   "devDependencies": {},
   "repository": {
