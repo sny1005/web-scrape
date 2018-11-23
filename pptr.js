@@ -20,13 +20,18 @@ async function main(){
 		if(resp.ok()){
 
 			console.log("Evaluating comic pages...");
-			var comicName = page.evaluate(() => g_comic_name);
-			var comicChapter = page.evaluate(() => g_chapter_name);
-			var comicPages = page.evaluate(() => pages);
+			const comicName = page.evaluate(() => g_comic_name);
+			const comicChapter = page.evaluate(() => g_chapter_name);
+			const comicPages = page.evaluate(() => pages);
+			const imgSrcDomain = 'https://images.dmzj.com/';
 
 			// comicDtl = await Promise.all([comicName, comicChapter, comicPages]);
-			comicDtl = await page.evaluate(() => {return {'cname':g_comic_name, 'cchapter':g_chapter_name, 'clinks':pages}});
-
+			comicDtl = await page.evaluate(() => {return {
+				'cname':g_comic_name,
+				'cchapter':g_chapter_name,
+				'clinks':JSON.parse(pages)
+			}});
+			comicDtl['clinks'] = comicDtl['clinks'].map(page => imgSrcDomain+page);
 			DownloadComic(comicDtl);
 			
 			// console.log(comicPages);
@@ -58,25 +63,41 @@ async function DownloadComic(comicDetails){
 	const comicChapter = comicDetails['cchapter'];
 	const comicPages = comicDetails['clinks'];
 
-	// console.log(comicName, comicChapter, comicPages);
-	const urlFD = await OpenFile(comicName+comicChapter+'.txt');
+	// console.log(comicPages);
+	const urlWS = fs.createWriteStream('./'+comicName+comicChapter+'.txt');
+	WriteStringArrayToStream(urlWS, comicPages).catch(err => console.error(err))
+	// urlWS.write();
+	
+	
 	
 	// await fs.open('./'+comicName+comicChapter+'.txt', 'w', async (err, fd) => {
-
-	console.log(typeof(urlFD));
-	comicPages.forEach(element => {
+/* 	comicPages.forEach(element => {
 		
-	});
+	}); */
 }
 
-function OpenFile(fileName){
+function OpenWriterbleStream(fileName){
 	// https://nodejs.org/api/fs.html#fs_fs_createwritestream_path_options
 	return new Promise((resolve, reject) => {
-		fs.open('./'+fileName, 'w', (err,fd) => {
+		fs.createWriteStream('./'+fileName, 'w', (err,fd) => {
 			if (err) return reject(err);
 			else return resolve(fd);
 		});
 	});
+}
+
+function WriteStringArrayToStream(stream, data){
+	return new Promise((resolve, reject) => {
+		try{
+			for(let i=0; i<data.length; i++){
+				// console.log(data[i]);
+				stream.write(data[i]+'\n');
+			}
+		} catch(err) {
+			return reject(err);
+		}
+		return resolve("0");
+	})
 }
 
 function ParseImageSrcUrl(document){
