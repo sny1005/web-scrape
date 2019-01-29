@@ -8,6 +8,7 @@
     "cheerio": "latest",
     "express": "latest",
     "help": "^3.0.2",
+    "pretty": "^2.0.0",
     "puppeteer-core": "^1.10.0",
     "request": "latest",
     "request-promise-native": "^1.0.5"

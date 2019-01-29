@@ -4,7 +4,7 @@ const request = require('request-promise-native');
 const tcookie = require('tough-cookie');
 const url = require('url');
 
-targetURL = 'https://manhua.dmzj.com/yongzhecizhibuganle/76257.shtml';
+var targetURL = 'https://manhua.dmzj.com/yongzhecizhibuganle/76257.shtml';
 
 async function main(){
 	const browser = await puppeteer.launch({executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'});
@@ -119,11 +119,9 @@ function DownloadEpisode(comicDetails){
 	for(let i=0; i<cookies.length; i++){
 		let tCookie = tcookie.Cookie.fromJSON(cookies[i]);
 		tCookie.key = cookies[i].name;
-		// console.log(tCookie);
 		j.setCookie(tCookie, origin, (err, cookie) => {
 			if(err) throw err;
 		});
-		// console.log(j);
 	}
 
 	let comicPages = comicDetails.clinks;
@@ -141,31 +139,8 @@ function DownloadEpisode(comicDetails){
 			console.error(err);
 			throw err;
 		})
-/* 		.then(res => {
-			console.log('received response with status: '+res.statusCode+' from '+thisPage);
-		})
-		.catch(err => {
-			console.error(err);
-			throw err;
-		}) */
 		.pipe(fs.createWriteStream(episodeFolder+'/'+(new url.URL(thisPage).pathname.split('/').pop())))
 	};
-
-/* 	let req = request.get({
-		url: comicPages[0],
-		jar: j,
-		headers: {referer: targetURL}
-	});
-	req.pipe */
-
-	// await fs.open('./'+comicName+comicChapter+'.txt', 'w', async (err, fd) => {
-/* 	comicPages.forEach(element => {
-		
-	}); */
-}
-
-async function DownloadOnePage(){
-
 }
 
 main(targetURL);

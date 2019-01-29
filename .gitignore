@@ -3,3 +3,8 @@ node_modules/
 
 #folders
 勇者辞职不干了/
+五等分的花嫁/
+
+#misc
+*.html
+*.log
